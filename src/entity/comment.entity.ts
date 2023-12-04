@@ -10,11 +10,11 @@ import * as protoscript from 'protoscript';
 
 @Entity()
 export class Comment extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
-  authorId: number;
+  authorId: string;
 
   @Column()
   message: string;
@@ -23,7 +23,7 @@ export class Comment extends BaseEntity {
   attachment: string;
 
   @Column()
-  postId: number;
+  postId: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP(6)' })
   createdAt: protoscript.Timestamp;

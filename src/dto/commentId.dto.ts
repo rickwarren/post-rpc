@@ -1,3 +1,3 @@
 export class CommentId {
-    id: number;
+    id: string;
 }

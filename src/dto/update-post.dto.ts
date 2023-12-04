@@ -3,8 +3,8 @@ import { CommentDto } from './comment.dto';
 
 
 export class UpdatePostDto {
-  id: number;
-  authorId: number;
+  id: string;
+  authorId: string;
   message: string;
   attachment: string;
   comments: CommentDto[];
