@@ -21,32 +21,32 @@ message DeleteCommentResponseDto {
 message EmptyComment {}
 
 message CommentId {
-  int32 id = 1;
+  string id = 1;
 }
 
 message UpdateCommentDto {
-  int32 id = 1;
-  int32 authorId = 2;
+  string id = 1;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
-  int32 postId = 5;
+  string postId = 5;
   google.protobuf.Timestamp createdAt = 6;
   google.protobuf.Timestamp updatedAt = 7;
 }
 
 message CreateCommentDto {
-  int32 authorId = 2;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
-  int32 postId = 5;
+  string postId = 5;
 }
 
 message Comment {
-  int32 id = 1;
-  int32 authorId = 2;
+  string id = 1;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
-  int32 postId = 5;
+  string postId = 5;
   google.protobuf.Timestamp createdAt = 6;
   google.protobuf.Timestamp updatedAt = 7;
 }

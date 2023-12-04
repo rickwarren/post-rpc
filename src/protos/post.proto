@@ -21,12 +21,12 @@ message DeletePostResponseDto {
 message EmptyPost {}
 
 message PostId {
-  int32 id = 1;
+  string id = 1;
 }
 
 message UpdatePostDto {
-  int32 id = 1;
-  int32 authorId = 2;
+  string id = 1;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
   repeated CommentDto comments = 5;
@@ -35,14 +35,14 @@ message UpdatePostDto {
 }
 
 message CreatePostDto {
-  int32 authorId = 1;
+  string authorId = 1;
   string message = 2;
   string attachment = 3;
 }
 
 message Post {
-  int32 id = 1;
-  int32 authorId = 2;
+  string id = 1;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
   repeated CommentDto comments = 5;
@@ -51,10 +51,10 @@ message Post {
 }
 
 message CommentDto {
-  int32 id = 1;
-  int32 authorId = 2;
+  string id = 1;
+  string authorId = 2;
   string message = 3;
   string attachment = 4;
-  int32 postId = 5;
+  string postId = 5;
 }
   

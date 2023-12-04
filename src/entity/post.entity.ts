@@ -12,11 +12,11 @@ import * as protoscript from 'protoscript';
 
 @Entity()
 export class Post extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
-  authorId: number;
+  authorId: string;
 
   @Column()
   message: string;

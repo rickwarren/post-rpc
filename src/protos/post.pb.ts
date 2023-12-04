@@ -26,12 +26,12 @@ export interface DeletePostResponseDto {
 export interface EmptyPost {}
 
 export interface PostId {
-  id: number;
+  id: string;
 }
 
 export interface UpdatePostDto {
-  id: number;
-  authorId: number;
+  id: string;
+  authorId: string;
   message: string;
   attachment: string;
   comments: CommentDto[];
@@ -40,14 +40,14 @@ export interface UpdatePostDto {
 }
 
 export interface CreatePostDto {
-  authorId: number;
+  authorId: string;
   message: string;
   attachment: string;
 }
 
 export interface Post {
-  id: number;
-  authorId: number;
+  id: string;
+  authorId: string;
   message: string;
   attachment: string;
   comments: CommentDto[];
@@ -56,11 +56,11 @@ export interface Post {
 }
 
 export interface CommentDto {
-  id: number;
-  authorId: number;
+  id: string;
+  authorId: string;
   message: string;
   attachment: string;
-  postId: number;
+  postId: string;
 }
 
 //========================================//
@@ -476,7 +476,7 @@ export const PostId = {
    */
   initialize: function (msg?: Partial<PostId>): PostId {
     return {
-      id: 0,
+      id: "",
       ...msg,
     };
   },
@@ -489,7 +489,7 @@ export const PostId = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
-      writer.writeInt32(1, msg.id);
+      writer.writeString(1, msg.id);
     }
     return writer;
   },
@@ -505,7 +505,7 @@ export const PostId = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.id = reader.readInt32();
+          msg.id = reader.readString();
           break;
         }
         default: {
@@ -544,8 +544,8 @@ export const UpdatePostDto = {
    */
   initialize: function (msg?: Partial<UpdatePostDto>): UpdatePostDto {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
       comments: [],
@@ -563,10 +563,10 @@ export const UpdatePostDto = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
-      writer.writeInt32(1, msg.id);
+      writer.writeString(1, msg.id);
     }
     if (msg.authorId) {
-      writer.writeInt32(2, msg.authorId);
+      writer.writeString(2, msg.authorId);
     }
     if (msg.message) {
       writer.writeString(3, msg.message);
@@ -609,11 +609,11 @@ export const UpdatePostDto = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.id = reader.readInt32();
+          msg.id = reader.readString();
           break;
         }
         case 2: {
-          msg.authorId = reader.readInt32();
+          msg.authorId = reader.readString();
           break;
         }
         case 3: {
@@ -674,7 +674,7 @@ export const CreatePostDto = {
    */
   initialize: function (msg?: Partial<CreatePostDto>): CreatePostDto {
     return {
-      authorId: 0,
+      authorId: "",
       message: "",
       attachment: "",
       ...msg,
@@ -689,7 +689,7 @@ export const CreatePostDto = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.authorId) {
-      writer.writeInt32(1, msg.authorId);
+      writer.writeString(1, msg.authorId);
     }
     if (msg.message) {
       writer.writeString(2, msg.message);
@@ -711,7 +711,7 @@ export const CreatePostDto = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.authorId = reader.readInt32();
+          msg.authorId = reader.readString();
           break;
         }
         case 2: {
@@ -758,8 +758,8 @@ export const Post = {
    */
   initialize: function (msg?: Partial<Post>): Post {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
       comments: [],
@@ -777,10 +777,10 @@ export const Post = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
-      writer.writeInt32(1, msg.id);
+      writer.writeString(1, msg.id);
     }
     if (msg.authorId) {
-      writer.writeInt32(2, msg.authorId);
+      writer.writeString(2, msg.authorId);
     }
     if (msg.message) {
       writer.writeString(3, msg.message);
@@ -820,11 +820,11 @@ export const Post = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.id = reader.readInt32();
+          msg.id = reader.readString();
           break;
         }
         case 2: {
-          msg.authorId = reader.readInt32();
+          msg.authorId = reader.readString();
           break;
         }
         case 3: {
@@ -885,11 +885,11 @@ export const CommentDto = {
    */
   initialize: function (msg?: Partial<CommentDto>): CommentDto {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
-      postId: 0,
+      postId: "",
       ...msg,
     };
   },
@@ -902,10 +902,10 @@ export const CommentDto = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
-      writer.writeInt32(1, msg.id);
+      writer.writeString(1, msg.id);
     }
     if (msg.authorId) {
-      writer.writeInt32(2, msg.authorId);
+      writer.writeString(2, msg.authorId);
     }
     if (msg.message) {
       writer.writeString(3, msg.message);
@@ -914,7 +914,7 @@ export const CommentDto = {
       writer.writeString(4, msg.attachment);
     }
     if (msg.postId) {
-      writer.writeInt32(5, msg.postId);
+      writer.writeString(5, msg.postId);
     }
     return writer;
   },
@@ -930,11 +930,11 @@ export const CommentDto = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          msg.id = reader.readInt32();
+          msg.id = reader.readString();
           break;
         }
         case 2: {
-          msg.authorId = reader.readInt32();
+          msg.authorId = reader.readString();
           break;
         }
         case 3: {
@@ -946,7 +946,7 @@ export const CommentDto = {
           break;
         }
         case 5: {
-          msg.postId = reader.readInt32();
+          msg.postId = reader.readString();
           break;
         }
         default: {
@@ -1144,7 +1144,7 @@ export const PostIdJSON = {
    */
   initialize: function (msg?: Partial<PostId>): PostId {
     return {
-      id: 0,
+      id: "",
       ...msg,
     };
   },
@@ -1166,7 +1166,7 @@ export const PostIdJSON = {
   _readMessage: function (msg: PostId, json: any): PostId {
     const _id_ = json["id"];
     if (_id_) {
-      msg.id = protoscript.parseNumber(_id_);
+      msg.id = _id_;
     }
     return msg;
   },
@@ -1195,8 +1195,8 @@ export const UpdatePostDtoJSON = {
    */
   initialize: function (msg?: Partial<UpdatePostDto>): UpdatePostDto {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
       comments: [],
@@ -1243,11 +1243,11 @@ export const UpdatePostDtoJSON = {
   _readMessage: function (msg: UpdatePostDto, json: any): UpdatePostDto {
     const _id_ = json["id"];
     if (_id_) {
-      msg.id = protoscript.parseNumber(_id_);
+      msg.id = _id_;
     }
     const _authorId_ = json["authorId"];
     if (_authorId_) {
-      msg.authorId = protoscript.parseNumber(_authorId_);
+      msg.authorId = _authorId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1300,7 +1300,7 @@ export const CreatePostDtoJSON = {
    */
   initialize: function (msg?: Partial<CreatePostDto>): CreatePostDto {
     return {
-      authorId: 0,
+      authorId: "",
       message: "",
       attachment: "",
       ...msg,
@@ -1332,7 +1332,7 @@ export const CreatePostDtoJSON = {
   _readMessage: function (msg: CreatePostDto, json: any): CreatePostDto {
     const _authorId_ = json["authorId"];
     if (_authorId_) {
-      msg.authorId = protoscript.parseNumber(_authorId_);
+      msg.authorId = _authorId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1366,8 +1366,8 @@ export const PostJSON = {
    */
   initialize: function (msg?: Partial<Post>): Post {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
       comments: [],
@@ -1412,11 +1412,11 @@ export const PostJSON = {
   _readMessage: function (msg: Post, json: any): Post {
     const _id_ = json["id"];
     if (_id_) {
-      msg.id = protoscript.parseNumber(_id_);
+      msg.id = _id_;
     }
     const _authorId_ = json["authorId"];
     if (_authorId_) {
-      msg.authorId = protoscript.parseNumber(_authorId_);
+      msg.authorId = _authorId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1469,11 +1469,11 @@ export const CommentDtoJSON = {
    */
   initialize: function (msg?: Partial<CommentDto>): CommentDto {
     return {
-      id: 0,
-      authorId: 0,
+      id: "",
+      authorId: "",
       message: "",
       attachment: "",
-      postId: 0,
+      postId: "",
       ...msg,
     };
   },
@@ -1509,11 +1509,11 @@ export const CommentDtoJSON = {
   _readMessage: function (msg: CommentDto, json: any): CommentDto {
     const _id_ = json["id"];
     if (_id_) {
-      msg.id = protoscript.parseNumber(_id_);
+      msg.id = _id_;
     }
     const _authorId_ = json["authorId"];
     if (_authorId_) {
-      msg.authorId = protoscript.parseNumber(_authorId_);
+      msg.authorId = _authorId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1525,7 +1525,7 @@ export const CommentDtoJSON = {
     }
     const _postId_ = json["postId"];
     if (_postId_) {
-      msg.postId = protoscript.parseNumber(_postId_);
+      msg.postId = _postId_;
     }
     return msg;
   },
