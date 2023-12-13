@@ -1,10 +1,11 @@
 import { createServer } from "http";
 import { createTwirpServer } from "twirpscript";
+import { commentProtoHandler } from "./services/comment.service.ts";
 import { postProtoHandler } from "./services/post.service.ts";
 
 const PORT = 8081;
 
-const app = createTwirpServer([postProtoHandler]);
+const app = createTwirpServer([commentProtoHandler, postProtoHandler]);
 
 app.use(async (req, _ctx, next) => {
   if (req.method === "OPTIONS") {

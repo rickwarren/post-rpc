@@ -11,7 +11,7 @@ import * as protoscript from "protoscript";
 import { Comment } from './comment.entity.ts';
 
 @Entity()
-export class Post {
+export class PostImage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

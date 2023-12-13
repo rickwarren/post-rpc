@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
   database: 'post',
   synchronize: true,
   logging: true,
-  entities: [Post, Comment],
+  entities: [Comment, Post],
   subscribers: [],
   migrations: [],
 });

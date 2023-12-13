@@ -1,27 +1,30 @@
-import { PostProto, createPostProto } from '../protos/Post.pb.ts';
+import { PostProto, createPostProto } from '../protos/post.pb.ts';
 import { getDataSource } from '../data-source.ts';
 import { Post } from '../entity/post.entity.ts';
+import { PostDto } from '../dto/post.dto.ts';
+import { CreatePostDto } from '../dto/create-post.dto.ts';
+import { UpdatePostDto } from '../dto/update-post.dto.ts';
+import { LocationId } from '../dto/locationId.dto.ts';
 import { GetPostsResponseDto } from '../dto/getPostsResponse.dto.ts';
 import { PostId } from '../dto/postId.dto.ts';
-import { CreatePostDto } from '../dto/create-Post.dto.ts';
-import { UpdatePostDto } from '../dto/update-Post.dto.ts';
 import { DeletePostResponseDto } from '../dto/deletePostResponse.dto.ts';
-import { PostDto } from '../dto/Post.dto.ts';
+
 
 const postProto: PostProto = {
-    getPosts: async (EmptyPost): Promise<GetPostsResponseDto> => {
+    getPosts: async (LocationId): Promise<GetPostsResponseDto> => {
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);
-        const posts = await postRepo.manager.find(Post);
-        if (posts.length < 1) {
-            throw Error('Posts not found');
+        const posts = await postRepo.manager.find(Post, { where: { locationId: LocationId.id }, order: { createdAt: 'DESC' }});
+        if(posts.length <= 0) {
+            return { posts: [] }
         }
         return { posts: posts };
     },
     getPost: async (postId: PostId): Promise<PostDto> => {
+        console.log(postId.id);
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);
-        const post = await postRepo.manager.findOneBy(Post, { id: postId.id });
+        const post = await postRepo.manager.findOne(Post, { where: { id: postId.id }});
         if(!post) {
             throw Error('Post not found');
         }
@@ -32,7 +35,7 @@ const postProto: PostProto = {
         const postRepo = AppDataSource.getRepository(Post);
         const post = await postRepo.manager.save(Post, data);
         if(!post) {
-            throw Error('Post not created');
+            throw Error('unable to create post');
         }
         return post;
     },
@@ -43,20 +46,20 @@ const postProto: PostProto = {
             Post,
             { id: data.id },
             data,
-          );
-        if(!post) {
-            throw Error('Post not updated');
+        );
+        if(!post.raw) {
+            throw Error('Unable to save post');
         }
         return post.raw;
     },
-    deletePost: async (postId: PostId): Promise<DeletePostResponseDto> => {
+    deletePost: async (PostId): Promise<DeletePostResponseDto> => {
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);
-        const post = await postRepo.manager.delete(Post, {where : { id: postId.id }})
-        if(!post) {
-            throw Error('Post not deleted');
+        const result = await postRepo.manager.delete(Post, { where: { id: PostId.id }});
+        if(!result) {
+            throw Error('Unable to delete user');
         }
-        return { success: true }
+        return { success: true };
     }
   };
   

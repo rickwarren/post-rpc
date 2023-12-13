@@ -1,5 +1,5 @@
-import { PostDto } from "./post.dto.ts";
+import { Post } from "../protos/post.pb.ts";
 
 export class GetPostsResponseDto {
-    posts: PostDto[];
+    posts: Post[];
 }

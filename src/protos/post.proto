@@ -1,9 +1,7 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 service PostProto {
-  rpc getPosts(EmptyPost) returns (GetPostsResponseDto);
+  rpc getPosts(LocationId) returns (GetPostsResponseDto);
   rpc getPost(PostId) returns (Post);
   rpc createPost(CreatePostDto) returns (Post);
   rpc updatePost(UpdatePostDto) returns (Post);
@@ -20,6 +18,10 @@ message DeletePostResponseDto {
 
 message EmptyPost {}
 
+message LocationId {
+  string id = 1;
+}
+
 message PostId {
   string id = 1;
 }
@@ -27,34 +29,39 @@ message PostId {
 message UpdatePostDto {
   string id = 1;
   string authorId = 2;
-  string message = 3;
-  string attachment = 4;
-  repeated CommentDto comments = 5;
-  google.protobuf.Timestamp createdAt = 6;
-  google.protobuf.Timestamp updatedAt = 7;
+  string locationId = 3;
+  string message = 4;
+  string attachment = 5;
+  repeated CommentDto comments = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
 }
 
 message CreatePostDto {
   string authorId = 1;
-  string message = 2;
-  string attachment = 3;
+  string locationId = 2;
+  string message = 3;
+  string attachment = 4;
 }
 
 message Post {
   string id = 1;
   string authorId = 2;
-  string message = 3;
-  string attachment = 4;
-  repeated CommentDto comments = 5;
-  google.protobuf.Timestamp createdAt = 6;
-  google.protobuf.Timestamp updatedAt = 7;
+  string locationId = 3;
+  string message = 4;
+  string attachment = 5;
+  repeated CommentDto comments = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
 }
 
 message CommentDto {
   string id = 1;
   string authorId = 2;
-  string message = 3;
-  string attachment = 4;
-  string postId = 5;
+  string message = 4;
+  string attachment = 5;
+  string postId = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
 }
   
