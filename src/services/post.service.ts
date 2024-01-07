@@ -21,7 +21,6 @@ const postProto: PostProto = {
         return { posts: posts };
     },
     getPost: async (postId: PostId): Promise<PostDto> => {
-        console.log(postId.id);
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);
         const post = await postRepo.manager.findOne(Post, { where: { id: postId.id }});
