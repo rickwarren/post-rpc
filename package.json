@@ -19,6 +19,7 @@
     "module": "^1.2.5",
     "nestjs-rmq": "^2.12.0",
     "pg": "^8.11.3",
+    "protoscript": "^0.0.20",
     "reflect-metadata": "^0.1.13",
     "rpc_ts": "^2.1.0",
     "rxjs": "^7.8.1",

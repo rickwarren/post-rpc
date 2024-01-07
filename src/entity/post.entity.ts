@@ -1,17 +1,17 @@
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import * as protoscript from "protoscript";
 import { Comment } from './comment.entity.ts';
-import * as protoscript from 'protoscript';
 
 @Entity()
-export class Post extends BaseEntity {
+export class Post {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,17 +19,28 @@ export class Post extends BaseEntity {
   authorId: string;
 
   @Column()
+  locationId: string;
+
+  @Column()
   message: string;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true })
   attachment: string;
 
-  @OneToMany(() => Comment, (comment) => comment.postId)
+  @OneToMany(() => Comment, comment => comment.postId)
+  @JoinColumn()
   comments: Comment[];
+  
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'NOW()',
+  })
+  createdAt: string;
 
-  @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP(6)' })
-  createdAt: protoscript.Timestamp;
-
-  @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
-  updatedAt: protoscript.Timestamp;
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'NOW()',
+    onUpdate: 'NOW()'
+  })
+  updatedAt: string;
 }

@@ -1,5 +1,5 @@
-import { CommentDto } from "./comment.dto.ts";
+import { Comment } from "../protos/comment.pb.ts";
 
 export class GetCommentsResponseDto {
-    comments: CommentDto[];
+    comments: Comment[];
 }

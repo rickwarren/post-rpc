@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+service SavedPostProto {
+  rpc getSavedPosts(SaveId) returns (GetSavedPostsResponseDto);
+  rpc getSavedPost(SaveId) returns (SavedPostDto);
+  rpc createSavedPost(CreateSavedPostDto) returns (SavedPostDto);
+  rpc deleteSavedPost(SaveId) returns (DeleteSavedPostResponseDto);
+}
+
+message GetSavedPostsResponseDto {
+  repeated SavedPostDto savedPosts = 1;
+}
+
+message DeleteSavedPostResponseDto {
+  bool success = 1;
+}
+
+message SaveId {
+  string id = 1;
+}
+
+message CreateSavedPostDto {
+  string userId = 1;
+  string postId = 2;
+}
+
+message SavedPostDto {
+  string id = 1;
+  string userId = 2;
+  string postId = 3;
+}
+
+  

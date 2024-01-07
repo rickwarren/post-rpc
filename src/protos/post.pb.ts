@@ -25,6 +25,10 @@ export interface DeletePostResponseDto {
 
 export interface EmptyPost {}
 
+export interface LocationId {
+  id: string;
+}
+
 export interface PostId {
   id: string;
 }
@@ -32,15 +36,17 @@ export interface PostId {
 export interface UpdatePostDto {
   id: string;
   authorId: string;
+  locationId: string;
   message: string;
   attachment: string;
   comments: CommentDto[];
-  createdAt: protoscript.Timestamp;
-  updatedAt: protoscript.Timestamp;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreatePostDto {
   authorId: string;
+  locationId: string;
   message: string;
   attachment: string;
 }
@@ -48,11 +54,12 @@ export interface CreatePostDto {
 export interface Post {
   id: string;
   authorId: string;
+  locationId: string;
   message: string;
   attachment: string;
   comments: CommentDto[];
-  createdAt: protoscript.Timestamp;
-  updatedAt: protoscript.Timestamp;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CommentDto {
@@ -61,6 +68,8 @@ export interface CommentDto {
   message: string;
   attachment: string;
   postId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 //========================================//
@@ -68,12 +77,12 @@ export interface CommentDto {
 //========================================//
 
 export async function getPosts(
-  emptyPost: EmptyPost,
+  locationId: LocationId,
   config?: ClientConfiguration,
 ): Promise<GetPostsResponseDto> {
   const response = await PBrequest(
     "/PostProto/getPosts",
-    EmptyPost.encode(emptyPost),
+    LocationId.encode(locationId),
     config,
   );
   return GetPostsResponseDto.decode(response);
@@ -132,12 +141,12 @@ export async function deletePost(
 //========================================//
 
 export async function getPostsJSON(
-  emptyPost: EmptyPost,
+  locationId: LocationId,
   config?: ClientConfiguration,
 ): Promise<GetPostsResponseDto> {
   const response = await JSONrequest(
     "/PostProto/getPosts",
-    EmptyPostJSON.encode(emptyPost),
+    LocationIdJSON.encode(locationId),
     config,
   );
   return GetPostsResponseDtoJSON.decode(response);
@@ -197,7 +206,7 @@ export async function deletePostJSON(
 
 export interface PostProto<Context = unknown> {
   getPosts: (
-    emptyPost: EmptyPost,
+    locationId: LocationId,
     context: Context,
   ) => Promise<GetPostsResponseDto> | GetPostsResponseDto;
   getPost: (postId: PostId, context: Context) => Promise<Post> | Post;
@@ -222,7 +231,7 @@ export function createPostProto<Context>(service: PostProto<Context>) {
       getPosts: {
         name: "getPosts",
         handler: service.getPosts,
-        input: { protobuf: EmptyPost, json: EmptyPostJSON },
+        input: { protobuf: LocationId, json: LocationIdJSON },
         output: {
           protobuf: GetPostsResponseDto,
           json: GetPostsResponseDtoJSON,
@@ -450,6 +459,74 @@ export const EmptyPost = {
   },
 };
 
+export const LocationId = {
+  /**
+   * Serializes LocationId to protobuf.
+   */
+  encode: function (msg: PartialDeep<LocationId>): Uint8Array {
+    return LocationId._writeMessage(
+      msg,
+      new protoscript.BinaryWriter(),
+    ).getResultBuffer();
+  },
+
+  /**
+   * Deserializes LocationId from protobuf.
+   */
+  decode: function (bytes: ByteSource): LocationId {
+    return LocationId._readMessage(
+      LocationId.initialize(),
+      new protoscript.BinaryReader(bytes),
+    );
+  },
+
+  /**
+   * Initializes LocationId with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<LocationId>): LocationId {
+    return {
+      id: "",
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<LocationId>,
+    writer: protoscript.BinaryWriter,
+  ): protoscript.BinaryWriter {
+    if (msg.id) {
+      writer.writeString(1, msg.id);
+    }
+    return writer;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (
+    msg: LocationId,
+    reader: protoscript.BinaryReader,
+  ): LocationId {
+    while (reader.nextField()) {
+      const field = reader.getFieldNumber();
+      switch (field) {
+        case 1: {
+          msg.id = reader.readString();
+          break;
+        }
+        default: {
+          reader.skipField();
+          break;
+        }
+      }
+    }
+    return msg;
+  },
+};
+
 export const PostId = {
   /**
    * Serializes PostId to protobuf.
@@ -546,11 +623,12 @@ export const UpdatePostDto = {
     return {
       id: "",
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       comments: [],
-      createdAt: protoscript.Timestamp.initialize(),
-      updatedAt: protoscript.Timestamp.initialize(),
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -568,32 +646,27 @@ export const UpdatePostDto = {
     if (msg.authorId) {
       writer.writeString(2, msg.authorId);
     }
+    if (msg.locationId) {
+      writer.writeString(3, msg.locationId);
+    }
     if (msg.message) {
-      writer.writeString(3, msg.message);
+      writer.writeString(4, msg.message);
     }
     if (msg.attachment) {
-      writer.writeString(4, msg.attachment);
+      writer.writeString(5, msg.attachment);
     }
     if (msg.comments?.length) {
       writer.writeRepeatedMessage(
-        5,
+        6,
         msg.comments as any,
         CommentDto._writeMessage,
       );
     }
     if (msg.createdAt) {
-      writer.writeMessage(
-        6,
-        msg.createdAt,
-        protoscript.Timestamp._writeMessage,
-      );
+      writer.writeString(7, msg.createdAt);
     }
     if (msg.updatedAt) {
-      writer.writeMessage(
-        7,
-        msg.updatedAt,
-        protoscript.Timestamp._writeMessage,
-      );
+      writer.writeString(8, msg.updatedAt);
     }
     return writer;
   },
@@ -617,25 +690,29 @@ export const UpdatePostDto = {
           break;
         }
         case 3: {
-          msg.message = reader.readString();
+          msg.locationId = reader.readString();
           break;
         }
         case 4: {
-          msg.attachment = reader.readString();
+          msg.message = reader.readString();
           break;
         }
         case 5: {
+          msg.attachment = reader.readString();
+          break;
+        }
+        case 6: {
           const m = CommentDto.initialize();
           reader.readMessage(m, CommentDto._readMessage);
           msg.comments.push(m);
           break;
         }
-        case 6: {
-          reader.readMessage(msg.createdAt, protoscript.Timestamp._readMessage);
+        case 7: {
+          msg.createdAt = reader.readString();
           break;
         }
-        case 7: {
-          reader.readMessage(msg.updatedAt, protoscript.Timestamp._readMessage);
+        case 8: {
+          msg.updatedAt = reader.readString();
           break;
         }
         default: {
@@ -675,6 +752,7 @@ export const CreatePostDto = {
   initialize: function (msg?: Partial<CreatePostDto>): CreatePostDto {
     return {
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       ...msg,
@@ -691,11 +769,14 @@ export const CreatePostDto = {
     if (msg.authorId) {
       writer.writeString(1, msg.authorId);
     }
+    if (msg.locationId) {
+      writer.writeString(2, msg.locationId);
+    }
     if (msg.message) {
-      writer.writeString(2, msg.message);
+      writer.writeString(3, msg.message);
     }
     if (msg.attachment) {
-      writer.writeString(3, msg.attachment);
+      writer.writeString(4, msg.attachment);
     }
     return writer;
   },
@@ -715,10 +796,14 @@ export const CreatePostDto = {
           break;
         }
         case 2: {
-          msg.message = reader.readString();
+          msg.locationId = reader.readString();
           break;
         }
         case 3: {
+          msg.message = reader.readString();
+          break;
+        }
+        case 4: {
           msg.attachment = reader.readString();
           break;
         }
@@ -760,11 +845,12 @@ export const Post = {
     return {
       id: "",
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       comments: [],
-      createdAt: protoscript.Timestamp.initialize(),
-      updatedAt: protoscript.Timestamp.initialize(),
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -782,32 +868,27 @@ export const Post = {
     if (msg.authorId) {
       writer.writeString(2, msg.authorId);
     }
+    if (msg.locationId) {
+      writer.writeString(3, msg.locationId);
+    }
     if (msg.message) {
-      writer.writeString(3, msg.message);
+      writer.writeString(4, msg.message);
     }
     if (msg.attachment) {
-      writer.writeString(4, msg.attachment);
+      writer.writeString(5, msg.attachment);
     }
     if (msg.comments?.length) {
       writer.writeRepeatedMessage(
-        5,
+        6,
         msg.comments as any,
         CommentDto._writeMessage,
       );
     }
     if (msg.createdAt) {
-      writer.writeMessage(
-        6,
-        msg.createdAt,
-        protoscript.Timestamp._writeMessage,
-      );
+      writer.writeString(7, msg.createdAt);
     }
     if (msg.updatedAt) {
-      writer.writeMessage(
-        7,
-        msg.updatedAt,
-        protoscript.Timestamp._writeMessage,
-      );
+      writer.writeString(8, msg.updatedAt);
     }
     return writer;
   },
@@ -828,25 +909,29 @@ export const Post = {
           break;
         }
         case 3: {
-          msg.message = reader.readString();
+          msg.locationId = reader.readString();
           break;
         }
         case 4: {
-          msg.attachment = reader.readString();
+          msg.message = reader.readString();
           break;
         }
         case 5: {
+          msg.attachment = reader.readString();
+          break;
+        }
+        case 6: {
           const m = CommentDto.initialize();
           reader.readMessage(m, CommentDto._readMessage);
           msg.comments.push(m);
           break;
         }
-        case 6: {
-          reader.readMessage(msg.createdAt, protoscript.Timestamp._readMessage);
+        case 7: {
+          msg.createdAt = reader.readString();
           break;
         }
-        case 7: {
-          reader.readMessage(msg.updatedAt, protoscript.Timestamp._readMessage);
+        case 8: {
+          msg.updatedAt = reader.readString();
           break;
         }
         default: {
@@ -890,6 +975,8 @@ export const CommentDto = {
       message: "",
       attachment: "",
       postId: "",
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -908,13 +995,19 @@ export const CommentDto = {
       writer.writeString(2, msg.authorId);
     }
     if (msg.message) {
-      writer.writeString(3, msg.message);
+      writer.writeString(4, msg.message);
     }
     if (msg.attachment) {
-      writer.writeString(4, msg.attachment);
+      writer.writeString(5, msg.attachment);
     }
     if (msg.postId) {
-      writer.writeString(5, msg.postId);
+      writer.writeString(6, msg.postId);
+    }
+    if (msg.createdAt) {
+      writer.writeString(7, msg.createdAt);
+    }
+    if (msg.updatedAt) {
+      writer.writeString(8, msg.updatedAt);
     }
     return writer;
   },
@@ -937,16 +1030,24 @@ export const CommentDto = {
           msg.authorId = reader.readString();
           break;
         }
-        case 3: {
+        case 4: {
           msg.message = reader.readString();
           break;
         }
-        case 4: {
+        case 5: {
           msg.attachment = reader.readString();
           break;
         }
-        case 5: {
+        case 6: {
           msg.postId = reader.readString();
+          break;
+        }
+        case 7: {
+          msg.createdAt = reader.readString();
+          break;
+        }
+        case 8: {
+          msg.updatedAt = reader.readString();
           break;
         }
         default: {
@@ -1124,6 +1225,59 @@ export const EmptyPostJSON = {
   },
 };
 
+export const LocationIdJSON = {
+  /**
+   * Serializes LocationId to JSON.
+   */
+  encode: function (msg: PartialDeep<LocationId>): string {
+    return JSON.stringify(LocationIdJSON._writeMessage(msg));
+  },
+
+  /**
+   * Deserializes LocationId from JSON.
+   */
+  decode: function (json: string): LocationId {
+    return LocationIdJSON._readMessage(
+      LocationIdJSON.initialize(),
+      JSON.parse(json),
+    );
+  },
+
+  /**
+   * Initializes LocationId with all fields set to their default value.
+   */
+  initialize: function (msg?: Partial<LocationId>): LocationId {
+    return {
+      id: "",
+      ...msg,
+    };
+  },
+
+  /**
+   * @private
+   */
+  _writeMessage: function (
+    msg: PartialDeep<LocationId>,
+  ): Record<string, unknown> {
+    const json: Record<string, unknown> = {};
+    if (msg.id) {
+      json["id"] = msg.id;
+    }
+    return json;
+  },
+
+  /**
+   * @private
+   */
+  _readMessage: function (msg: LocationId, json: any): LocationId {
+    const _id_ = json["id"];
+    if (_id_) {
+      msg.id = _id_;
+    }
+    return msg;
+  },
+};
+
 export const PostIdJSON = {
   /**
    * Serializes PostId to JSON.
@@ -1197,11 +1351,12 @@ export const UpdatePostDtoJSON = {
     return {
       id: "",
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       comments: [],
-      createdAt: protoscript.TimestampJSON.initialize(),
-      updatedAt: protoscript.TimestampJSON.initialize(),
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -1219,6 +1374,9 @@ export const UpdatePostDtoJSON = {
     if (msg.authorId) {
       json["authorId"] = msg.authorId;
     }
+    if (msg.locationId) {
+      json["locationId"] = msg.locationId;
+    }
     if (msg.message) {
       json["message"] = msg.message;
     }
@@ -1228,11 +1386,11 @@ export const UpdatePostDtoJSON = {
     if (msg.comments?.length) {
       json["comments"] = msg.comments.map(CommentDtoJSON._writeMessage);
     }
-    if (msg.createdAt && msg.createdAt.seconds && msg.createdAt.nanos) {
-      json["createdAt"] = protoscript.serializeTimestamp(msg.createdAt);
+    if (msg.createdAt) {
+      json["createdAt"] = msg.createdAt;
     }
-    if (msg.updatedAt && msg.updatedAt.seconds && msg.updatedAt.nanos) {
-      json["updatedAt"] = protoscript.serializeTimestamp(msg.updatedAt);
+    if (msg.updatedAt) {
+      json["updatedAt"] = msg.updatedAt;
     }
     return json;
   },
@@ -1248,6 +1406,10 @@ export const UpdatePostDtoJSON = {
     const _authorId_ = json["authorId"];
     if (_authorId_) {
       msg.authorId = _authorId_;
+    }
+    const _locationId_ = json["locationId"];
+    if (_locationId_) {
+      msg.locationId = _locationId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1267,11 +1429,11 @@ export const UpdatePostDtoJSON = {
     }
     const _createdAt_ = json["createdAt"];
     if (_createdAt_) {
-      msg.createdAt = protoscript.parseTimestamp(_createdAt_);
+      msg.createdAt = _createdAt_;
     }
     const _updatedAt_ = json["updatedAt"];
     if (_updatedAt_) {
-      msg.updatedAt = protoscript.parseTimestamp(_updatedAt_);
+      msg.updatedAt = _updatedAt_;
     }
     return msg;
   },
@@ -1301,6 +1463,7 @@ export const CreatePostDtoJSON = {
   initialize: function (msg?: Partial<CreatePostDto>): CreatePostDto {
     return {
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       ...msg,
@@ -1316,6 +1479,9 @@ export const CreatePostDtoJSON = {
     const json: Record<string, unknown> = {};
     if (msg.authorId) {
       json["authorId"] = msg.authorId;
+    }
+    if (msg.locationId) {
+      json["locationId"] = msg.locationId;
     }
     if (msg.message) {
       json["message"] = msg.message;
@@ -1333,6 +1499,10 @@ export const CreatePostDtoJSON = {
     const _authorId_ = json["authorId"];
     if (_authorId_) {
       msg.authorId = _authorId_;
+    }
+    const _locationId_ = json["locationId"];
+    if (_locationId_) {
+      msg.locationId = _locationId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1368,11 +1538,12 @@ export const PostJSON = {
     return {
       id: "",
       authorId: "",
+      locationId: "",
       message: "",
       attachment: "",
       comments: [],
-      createdAt: protoscript.TimestampJSON.initialize(),
-      updatedAt: protoscript.TimestampJSON.initialize(),
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -1388,6 +1559,9 @@ export const PostJSON = {
     if (msg.authorId) {
       json["authorId"] = msg.authorId;
     }
+    if (msg.locationId) {
+      json["locationId"] = msg.locationId;
+    }
     if (msg.message) {
       json["message"] = msg.message;
     }
@@ -1397,11 +1571,11 @@ export const PostJSON = {
     if (msg.comments?.length) {
       json["comments"] = msg.comments.map(CommentDtoJSON._writeMessage);
     }
-    if (msg.createdAt && msg.createdAt.seconds && msg.createdAt.nanos) {
-      json["createdAt"] = protoscript.serializeTimestamp(msg.createdAt);
+    if (msg.createdAt) {
+      json["createdAt"] = msg.createdAt;
     }
-    if (msg.updatedAt && msg.updatedAt.seconds && msg.updatedAt.nanos) {
-      json["updatedAt"] = protoscript.serializeTimestamp(msg.updatedAt);
+    if (msg.updatedAt) {
+      json["updatedAt"] = msg.updatedAt;
     }
     return json;
   },
@@ -1417,6 +1591,10 @@ export const PostJSON = {
     const _authorId_ = json["authorId"];
     if (_authorId_) {
       msg.authorId = _authorId_;
+    }
+    const _locationId_ = json["locationId"];
+    if (_locationId_) {
+      msg.locationId = _locationId_;
     }
     const _message_ = json["message"];
     if (_message_) {
@@ -1436,11 +1614,11 @@ export const PostJSON = {
     }
     const _createdAt_ = json["createdAt"];
     if (_createdAt_) {
-      msg.createdAt = protoscript.parseTimestamp(_createdAt_);
+      msg.createdAt = _createdAt_;
     }
     const _updatedAt_ = json["updatedAt"];
     if (_updatedAt_) {
-      msg.updatedAt = protoscript.parseTimestamp(_updatedAt_);
+      msg.updatedAt = _updatedAt_;
     }
     return msg;
   },
@@ -1474,6 +1652,8 @@ export const CommentDtoJSON = {
       message: "",
       attachment: "",
       postId: "",
+      createdAt: "",
+      updatedAt: "",
       ...msg,
     };
   },
@@ -1499,6 +1679,12 @@ export const CommentDtoJSON = {
     }
     if (msg.postId) {
       json["postId"] = msg.postId;
+    }
+    if (msg.createdAt) {
+      json["createdAt"] = msg.createdAt;
+    }
+    if (msg.updatedAt) {
+      json["updatedAt"] = msg.updatedAt;
     }
     return json;
   },
@@ -1526,6 +1712,14 @@ export const CommentDtoJSON = {
     const _postId_ = json["postId"];
     if (_postId_) {
       msg.postId = _postId_;
+    }
+    const _createdAt_ = json["createdAt"];
+    if (_createdAt_) {
+      msg.createdAt = _createdAt_;
+    }
+    const _updatedAt_ = json["updatedAt"];
+    if (_updatedAt_) {
+      msg.updatedAt = _updatedAt_;
     }
     return msg;
   },
