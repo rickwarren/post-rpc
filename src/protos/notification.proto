@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+service NotificationProto {
+  rpc getNotifications(UserId) returns (GetNotificationsResponseDto);
+  rpc getNotification(NotificationId) returns (NotificationDto);
+  rpc createNotification(CreateNotificationDto) returns (NotificationDto);
+  rpc updateNotification(UpdateNotificationDto) returns (NotificationDto);
+}
+
+message GetNotificationsResponseDto {
+  repeated NotificationDto notifications = 1;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message NotificationId {
+  string id = 1;
+}
+
+message UpdateNotificationDto {
+  string id = 1;
+  string userId = 2;
+  string initiatorId = 3;
+  string notificationType = 4;
+  string label = 5;
+  string status = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}
+
+message CreateNotificationDto {
+  string userId = 1;
+  string initiatorId = 2;
+  string notificationType = 3;
+  string label = 4;
+  string status = 5; 
+}
+
+message NotificationDto {
+  string id = 1;
+  string userId = 2;
+  string initiatorId = 3;
+  string notificationType = 4;
+  string label = 5;
+  string status = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+}

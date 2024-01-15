@@ -2,14 +2,14 @@ syntax = "proto3";
 
 service PostProto {
   rpc getPosts(LocationId) returns (GetPostsResponseDto);
-  rpc getPost(PostId) returns (Post);
-  rpc createPost(CreatePostDto) returns (Post);
-  rpc updatePost(UpdatePostDto) returns (Post);
+  rpc getPost(PostId) returns (PostDto);
+  rpc createPost(CreatePostDto) returns (PostDto);
+  rpc updatePost(UpdatePostDto) returns (PostDto);
   rpc deletePost(PostId) returns (DeletePostResponseDto);
 }
 
 message GetPostsResponseDto {
-  repeated Post posts = 1;
+  repeated PostDto posts = 1;
 }
 
 message DeletePostResponseDto {
@@ -32,7 +32,7 @@ message UpdatePostDto {
   string locationId = 3;
   string message = 4;
   string attachment = 5;
-  repeated CommentDto comments = 6;
+  repeated CommDto comments = 6;
   string createdAt = 7;
   string updatedAt = 8;
 }
@@ -44,18 +44,18 @@ message CreatePostDto {
   string attachment = 4;
 }
 
-message Post {
+message PostDto {
   string id = 1;
   string authorId = 2;
   string locationId = 3;
   string message = 4;
   string attachment = 5;
-  repeated CommentDto comments = 6;
+  repeated CommDto comments = 6;
   string createdAt = 7;
   string updatedAt = 8;
 }
 
-message CommentDto {
+message CommDto {
   string id = 1;
   string authorId = 2;
   string message = 4;
