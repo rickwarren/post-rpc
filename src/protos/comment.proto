@@ -3,13 +3,13 @@ syntax = "proto3";
 service CommentProto {
   rpc getComments(EmptyComment) returns (GetCommentsResponseDto);
   rpc getCommentsForPost(CommentPostId) returns (GetCommentsResponseDto);
-  rpc createComment(CreateCommentDto) returns (Comment);
-  rpc updateComment(UpdateCommentDto) returns (Comment);
+  rpc createComment(CreateCommentDto) returns (CommentDto);
+  rpc updateComment(UpdateCommentDto) returns (CommentDto);
   rpc deleteComment(CommentId) returns (DeleteCommentResponseDto);
 } 
 
 message GetCommentsResponseDto {
-  repeated Comment comments = 1;
+  repeated CommentDto comments = 1;
 }
 
 message DeleteCommentResponseDto {
@@ -43,7 +43,7 @@ message CreateCommentDto {
   string postId = 6;
 }
 
-message Comment {
+message CommentDto {
   string id = 1;
   string authorId = 2;
   string message = 4;

@@ -1,20 +1,22 @@
-import { PostProto, createPostProto } from '../protos/post.pb.ts';
+import { 
+    GetPostsResponseDto, 
+    PostProto, 
+    createPostProto, 
+    LocationId, 
+    PostId, 
+    CreatePostDto, 
+    UpdatePostDto,
+    DeletePostResponseDto, 
+    PostDto 
+} from '../protos/post.pb.ts';
 import { getDataSource } from '../data-source.ts';
 import { Post } from '../entity/post.entity.ts';
-import { PostDto } from '../dto/post.dto.ts';
-import { CreatePostDto } from '../dto/create-post.dto.ts';
-import { UpdatePostDto } from '../dto/update-post.dto.ts';
-import { LocationId } from '../dto/locationId.dto.ts';
-import { GetPostsResponseDto } from '../dto/getPostsResponse.dto.ts';
-import { PostId } from '../dto/postId.dto.ts';
-import { DeletePostResponseDto } from '../dto/deletePostResponse.dto.ts';
-
 
 const postProto: PostProto = {
-    getPosts: async (LocationId): Promise<GetPostsResponseDto> => {
+    getPosts: async (locationId: LocationId): Promise<GetPostsResponseDto> => {
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);
-        const posts = await postRepo.manager.find(Post, { where: { locationId: LocationId.id }, order: { createdAt: 'DESC' }});
+        const posts = await postRepo.manager.find(Post, { where: { locationId: locationId.id }, order: { createdAt: 'DESC' }});
         if(posts.length <= 0) {
             return { posts: [] }
         }

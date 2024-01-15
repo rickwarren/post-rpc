@@ -1,13 +1,17 @@
+import { 
+    CommentDto, 
+    CommentId, 
+    CommentPostId, 
+    CommentProto, 
+    CreateCommentDto, 
+    DeleteCommentResponseDto,
+    GetCommentsResponseDto, 
+    UpdateCommentDto, 
+    createCommentProto 
+} from '../protos/comment.pb.ts';
 import { getDataSource } from '../data-source.ts';
-import { CommentProto, createCommentProto } from '../protos/comment.pb.ts';
 import { Comment } from '../entity/comment.entity.ts';
-import { CreateCommentDto } from '../dto/create-comment.dto.ts';
-import { CommentDto } from '../dto/comment.dto.ts';
-import { UpdateCommentDto } from '../dto/update-comment.dto.ts';
-import { GetCommentsResponseDto } from '../dto/getCommentsResponse.dto.ts';
-import { PostId } from '../dto/postId.dto.ts';
-import { UserId } from '../dto/userId.dto.ts';
-import { DeleteCommentResponseDto } from '../dto/deleteCommentResponse.dto.ts';
+
 
 const commentProto: CommentProto = {
     getComments: async (EmptyProfile): Promise<GetCommentsResponseDto> => {
@@ -19,7 +23,7 @@ const commentProto: CommentProto = {
         }
         return { comments: comments };
     },
-    getCommentsForPost: async (id: PostId): Promise<GetCommentsResponseDto> => {
+    getCommentsForPost: async (id: CommentPostId): Promise<GetCommentsResponseDto> => {
         const AppDataSource = await getDataSource();
         const commentRepo = AppDataSource.getRepository(Comment);
         const comments = await commentRepo.manager.find(Comment, { where: { postId: id.id }, order: { createdAt: 'ASC' }});
@@ -46,7 +50,7 @@ const commentProto: CommentProto = {
         }
         return comment;
     },
-    deleteComment: async (id: UserId): Promise<DeleteCommentResponseDto> => {
+    deleteComment: async (id: CommentId): Promise<DeleteCommentResponseDto> => {
         const AppDataSource = await getDataSource();
         const commentRepo = AppDataSource.getRepository(Comment);
         const comment = await commentRepo.manager.delete(Comment, { where: { ownerId: id.id }});

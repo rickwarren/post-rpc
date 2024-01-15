@@ -1,6 +1,6 @@
 import { CreateSavedPostDto, DeleteSavedPostResponseDto, GetSavedPostsResponseDto, SaveId, SavedPostDto, SavedPostProto, createSavedPostProto } from '../protos/saved-post.pb.ts';
 import { getDataSource } from '../data-source.ts';
-import { SavedPost } from 'src/entity/saved-post.entity.ts';
+import { SavedPost } from '../entity/saved-post.entity.ts';
 
 
 const savedPostProto: SavedPostProto = {

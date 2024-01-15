@@ -16,7 +16,7 @@ import type { ClientConfiguration } from "twirpscript";
 //========================================//
 
 export interface GetPostsResponseDto {
-  posts: Post[];
+  posts: PostDto[];
 }
 
 export interface DeletePostResponseDto {
@@ -39,7 +39,7 @@ export interface UpdatePostDto {
   locationId: string;
   message: string;
   attachment: string;
-  comments: CommentDto[];
+  comments: CommDto[];
   createdAt: string;
   updatedAt: string;
 }
@@ -51,18 +51,18 @@ export interface CreatePostDto {
   attachment: string;
 }
 
-export interface Post {
+export interface PostDto {
   id: string;
   authorId: string;
   locationId: string;
   message: string;
   attachment: string;
-  comments: CommentDto[];
+  comments: CommDto[];
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CommentDto {
+export interface CommDto {
   id: string;
   authorId: string;
   message: string;
@@ -91,37 +91,37 @@ export async function getPosts(
 export async function getPost(
   postId: PostId,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await PBrequest(
     "/PostProto/getPost",
     PostId.encode(postId),
     config,
   );
-  return Post.decode(response);
+  return PostDto.decode(response);
 }
 
 export async function createPost(
   createPostDto: CreatePostDto,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await PBrequest(
     "/PostProto/createPost",
     CreatePostDto.encode(createPostDto),
     config,
   );
-  return Post.decode(response);
+  return PostDto.decode(response);
 }
 
 export async function updatePost(
   updatePostDto: UpdatePostDto,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await PBrequest(
     "/PostProto/updatePost",
     UpdatePostDto.encode(updatePostDto),
     config,
   );
-  return Post.decode(response);
+  return PostDto.decode(response);
 }
 
 export async function deletePost(
@@ -155,37 +155,37 @@ export async function getPostsJSON(
 export async function getPostJSON(
   postId: PostId,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await JSONrequest(
     "/PostProto/getPost",
     PostIdJSON.encode(postId),
     config,
   );
-  return PostJSON.decode(response);
+  return PostDtoJSON.decode(response);
 }
 
 export async function createPostJSON(
   createPostDto: CreatePostDto,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await JSONrequest(
     "/PostProto/createPost",
     CreatePostDtoJSON.encode(createPostDto),
     config,
   );
-  return PostJSON.decode(response);
+  return PostDtoJSON.decode(response);
 }
 
 export async function updatePostJSON(
   updatePostDto: UpdatePostDto,
   config?: ClientConfiguration,
-): Promise<Post> {
+): Promise<PostDto> {
   const response = await JSONrequest(
     "/PostProto/updatePost",
     UpdatePostDtoJSON.encode(updatePostDto),
     config,
   );
-  return PostJSON.decode(response);
+  return PostDtoJSON.decode(response);
 }
 
 export async function deletePostJSON(
@@ -209,15 +209,15 @@ export interface PostProto<Context = unknown> {
     locationId: LocationId,
     context: Context,
   ) => Promise<GetPostsResponseDto> | GetPostsResponseDto;
-  getPost: (postId: PostId, context: Context) => Promise<Post> | Post;
+  getPost: (postId: PostId, context: Context) => Promise<PostDto> | PostDto;
   createPost: (
     createPostDto: CreatePostDto,
     context: Context,
-  ) => Promise<Post> | Post;
+  ) => Promise<PostDto> | PostDto;
   updatePost: (
     updatePostDto: UpdatePostDto,
     context: Context,
-  ) => Promise<Post> | Post;
+  ) => Promise<PostDto> | PostDto;
   deletePost: (
     postId: PostId,
     context: Context,
@@ -241,19 +241,19 @@ export function createPostProto<Context>(service: PostProto<Context>) {
         name: "getPost",
         handler: service.getPost,
         input: { protobuf: PostId, json: PostIdJSON },
-        output: { protobuf: Post, json: PostJSON },
+        output: { protobuf: PostDto, json: PostDtoJSON },
       },
       createPost: {
         name: "createPost",
         handler: service.createPost,
         input: { protobuf: CreatePostDto, json: CreatePostDtoJSON },
-        output: { protobuf: Post, json: PostJSON },
+        output: { protobuf: PostDto, json: PostDtoJSON },
       },
       updatePost: {
         name: "updatePost",
         handler: service.updatePost,
         input: { protobuf: UpdatePostDto, json: UpdatePostDtoJSON },
-        output: { protobuf: Post, json: PostJSON },
+        output: { protobuf: PostDto, json: PostDtoJSON },
       },
       deletePost: {
         name: "deletePost",
@@ -313,7 +313,7 @@ export const GetPostsResponseDto = {
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.posts?.length) {
-      writer.writeRepeatedMessage(1, msg.posts as any, Post._writeMessage);
+      writer.writeRepeatedMessage(1, msg.posts as any, PostDto._writeMessage);
     }
     return writer;
   },
@@ -329,8 +329,8 @@ export const GetPostsResponseDto = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          const m = Post.initialize();
-          reader.readMessage(m, Post._readMessage);
+          const m = PostDto.initialize();
+          reader.readMessage(m, PostDto._readMessage);
           msg.posts.push(m);
           break;
         }
@@ -659,7 +659,7 @@ export const UpdatePostDto = {
       writer.writeRepeatedMessage(
         6,
         msg.comments as any,
-        CommentDto._writeMessage,
+        CommDto._writeMessage,
       );
     }
     if (msg.createdAt) {
@@ -702,8 +702,8 @@ export const UpdatePostDto = {
           break;
         }
         case 6: {
-          const m = CommentDto.initialize();
-          reader.readMessage(m, CommentDto._readMessage);
+          const m = CommDto.initialize();
+          reader.readMessage(m, CommDto._readMessage);
           msg.comments.push(m);
           break;
         }
@@ -817,31 +817,31 @@ export const CreatePostDto = {
   },
 };
 
-export const Post = {
+export const PostDto = {
   /**
-   * Serializes Post to protobuf.
+   * Serializes PostDto to protobuf.
    */
-  encode: function (msg: PartialDeep<Post>): Uint8Array {
-    return Post._writeMessage(
+  encode: function (msg: PartialDeep<PostDto>): Uint8Array {
+    return PostDto._writeMessage(
       msg,
       new protoscript.BinaryWriter(),
     ).getResultBuffer();
   },
 
   /**
-   * Deserializes Post from protobuf.
+   * Deserializes PostDto from protobuf.
    */
-  decode: function (bytes: ByteSource): Post {
-    return Post._readMessage(
-      Post.initialize(),
+  decode: function (bytes: ByteSource): PostDto {
+    return PostDto._readMessage(
+      PostDto.initialize(),
       new protoscript.BinaryReader(bytes),
     );
   },
 
   /**
-   * Initializes Post with all fields set to their default value.
+   * Initializes PostDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<Post>): Post {
+  initialize: function (msg?: Partial<PostDto>): PostDto {
     return {
       id: "",
       authorId: "",
@@ -859,7 +859,7 @@ export const Post = {
    * @private
    */
   _writeMessage: function (
-    msg: PartialDeep<Post>,
+    msg: PartialDeep<PostDto>,
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
@@ -881,7 +881,7 @@ export const Post = {
       writer.writeRepeatedMessage(
         6,
         msg.comments as any,
-        CommentDto._writeMessage,
+        CommDto._writeMessage,
       );
     }
     if (msg.createdAt) {
@@ -896,7 +896,10 @@ export const Post = {
   /**
    * @private
    */
-  _readMessage: function (msg: Post, reader: protoscript.BinaryReader): Post {
+  _readMessage: function (
+    msg: PostDto,
+    reader: protoscript.BinaryReader,
+  ): PostDto {
     while (reader.nextField()) {
       const field = reader.getFieldNumber();
       switch (field) {
@@ -921,8 +924,8 @@ export const Post = {
           break;
         }
         case 6: {
-          const m = CommentDto.initialize();
-          reader.readMessage(m, CommentDto._readMessage);
+          const m = CommDto.initialize();
+          reader.readMessage(m, CommDto._readMessage);
           msg.comments.push(m);
           break;
         }
@@ -944,31 +947,31 @@ export const Post = {
   },
 };
 
-export const CommentDto = {
+export const CommDto = {
   /**
-   * Serializes CommentDto to protobuf.
+   * Serializes CommDto to protobuf.
    */
-  encode: function (msg: PartialDeep<CommentDto>): Uint8Array {
-    return CommentDto._writeMessage(
+  encode: function (msg: PartialDeep<CommDto>): Uint8Array {
+    return CommDto._writeMessage(
       msg,
       new protoscript.BinaryWriter(),
     ).getResultBuffer();
   },
 
   /**
-   * Deserializes CommentDto from protobuf.
+   * Deserializes CommDto from protobuf.
    */
-  decode: function (bytes: ByteSource): CommentDto {
-    return CommentDto._readMessage(
-      CommentDto.initialize(),
+  decode: function (bytes: ByteSource): CommDto {
+    return CommDto._readMessage(
+      CommDto.initialize(),
       new protoscript.BinaryReader(bytes),
     );
   },
 
   /**
-   * Initializes CommentDto with all fields set to their default value.
+   * Initializes CommDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<CommentDto>): CommentDto {
+  initialize: function (msg?: Partial<CommDto>): CommDto {
     return {
       id: "",
       authorId: "",
@@ -985,7 +988,7 @@ export const CommentDto = {
    * @private
    */
   _writeMessage: function (
-    msg: PartialDeep<CommentDto>,
+    msg: PartialDeep<CommDto>,
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
@@ -1016,9 +1019,9 @@ export const CommentDto = {
    * @private
    */
   _readMessage: function (
-    msg: CommentDto,
+    msg: CommDto,
     reader: protoscript.BinaryReader,
-  ): CommentDto {
+  ): CommDto {
     while (reader.nextField()) {
       const field = reader.getFieldNumber();
       switch (field) {
@@ -1102,7 +1105,7 @@ export const GetPostsResponseDtoJSON = {
   ): Record<string, unknown> {
     const json: Record<string, unknown> = {};
     if (msg.posts?.length) {
-      json["posts"] = msg.posts.map(PostJSON._writeMessage);
+      json["posts"] = msg.posts.map(PostDtoJSON._writeMessage);
     }
     return json;
   },
@@ -1117,8 +1120,8 @@ export const GetPostsResponseDtoJSON = {
     const _posts_ = json["posts"];
     if (_posts_) {
       for (const item of _posts_) {
-        const m = PostJSON.initialize();
-        PostJSON._readMessage(m, item);
+        const m = PostDtoJSON.initialize();
+        PostDtoJSON._readMessage(m, item);
         msg.posts.push(m);
       }
     }
@@ -1384,7 +1387,7 @@ export const UpdatePostDtoJSON = {
       json["attachment"] = msg.attachment;
     }
     if (msg.comments?.length) {
-      json["comments"] = msg.comments.map(CommentDtoJSON._writeMessage);
+      json["comments"] = msg.comments.map(CommDtoJSON._writeMessage);
     }
     if (msg.createdAt) {
       json["createdAt"] = msg.createdAt;
@@ -1422,8 +1425,8 @@ export const UpdatePostDtoJSON = {
     const _comments_ = json["comments"];
     if (_comments_) {
       for (const item of _comments_) {
-        const m = CommentDtoJSON.initialize();
-        CommentDtoJSON._readMessage(m, item);
+        const m = CommDtoJSON.initialize();
+        CommDtoJSON._readMessage(m, item);
         msg.comments.push(m);
       }
     }
@@ -1516,25 +1519,25 @@ export const CreatePostDtoJSON = {
   },
 };
 
-export const PostJSON = {
+export const PostDtoJSON = {
   /**
-   * Serializes Post to JSON.
+   * Serializes PostDto to JSON.
    */
-  encode: function (msg: PartialDeep<Post>): string {
-    return JSON.stringify(PostJSON._writeMessage(msg));
+  encode: function (msg: PartialDeep<PostDto>): string {
+    return JSON.stringify(PostDtoJSON._writeMessage(msg));
   },
 
   /**
-   * Deserializes Post from JSON.
+   * Deserializes PostDto from JSON.
    */
-  decode: function (json: string): Post {
-    return PostJSON._readMessage(PostJSON.initialize(), JSON.parse(json));
+  decode: function (json: string): PostDto {
+    return PostDtoJSON._readMessage(PostDtoJSON.initialize(), JSON.parse(json));
   },
 
   /**
-   * Initializes Post with all fields set to their default value.
+   * Initializes PostDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<Post>): Post {
+  initialize: function (msg?: Partial<PostDto>): PostDto {
     return {
       id: "",
       authorId: "",
@@ -1551,7 +1554,7 @@ export const PostJSON = {
   /**
    * @private
    */
-  _writeMessage: function (msg: PartialDeep<Post>): Record<string, unknown> {
+  _writeMessage: function (msg: PartialDeep<PostDto>): Record<string, unknown> {
     const json: Record<string, unknown> = {};
     if (msg.id) {
       json["id"] = msg.id;
@@ -1569,7 +1572,7 @@ export const PostJSON = {
       json["attachment"] = msg.attachment;
     }
     if (msg.comments?.length) {
-      json["comments"] = msg.comments.map(CommentDtoJSON._writeMessage);
+      json["comments"] = msg.comments.map(CommDtoJSON._writeMessage);
     }
     if (msg.createdAt) {
       json["createdAt"] = msg.createdAt;
@@ -1583,7 +1586,7 @@ export const PostJSON = {
   /**
    * @private
    */
-  _readMessage: function (msg: Post, json: any): Post {
+  _readMessage: function (msg: PostDto, json: any): PostDto {
     const _id_ = json["id"];
     if (_id_) {
       msg.id = _id_;
@@ -1607,8 +1610,8 @@ export const PostJSON = {
     const _comments_ = json["comments"];
     if (_comments_) {
       for (const item of _comments_) {
-        const m = CommentDtoJSON.initialize();
-        CommentDtoJSON._readMessage(m, item);
+        const m = CommDtoJSON.initialize();
+        CommDtoJSON._readMessage(m, item);
         msg.comments.push(m);
       }
     }
@@ -1624,28 +1627,25 @@ export const PostJSON = {
   },
 };
 
-export const CommentDtoJSON = {
+export const CommDtoJSON = {
   /**
-   * Serializes CommentDto to JSON.
+   * Serializes CommDto to JSON.
    */
-  encode: function (msg: PartialDeep<CommentDto>): string {
-    return JSON.stringify(CommentDtoJSON._writeMessage(msg));
+  encode: function (msg: PartialDeep<CommDto>): string {
+    return JSON.stringify(CommDtoJSON._writeMessage(msg));
   },
 
   /**
-   * Deserializes CommentDto from JSON.
+   * Deserializes CommDto from JSON.
    */
-  decode: function (json: string): CommentDto {
-    return CommentDtoJSON._readMessage(
-      CommentDtoJSON.initialize(),
-      JSON.parse(json),
-    );
+  decode: function (json: string): CommDto {
+    return CommDtoJSON._readMessage(CommDtoJSON.initialize(), JSON.parse(json));
   },
 
   /**
-   * Initializes CommentDto with all fields set to their default value.
+   * Initializes CommDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<CommentDto>): CommentDto {
+  initialize: function (msg?: Partial<CommDto>): CommDto {
     return {
       id: "",
       authorId: "",
@@ -1661,9 +1661,7 @@ export const CommentDtoJSON = {
   /**
    * @private
    */
-  _writeMessage: function (
-    msg: PartialDeep<CommentDto>,
-  ): Record<string, unknown> {
+  _writeMessage: function (msg: PartialDeep<CommDto>): Record<string, unknown> {
     const json: Record<string, unknown> = {};
     if (msg.id) {
       json["id"] = msg.id;
@@ -1692,7 +1690,7 @@ export const CommentDtoJSON = {
   /**
    * @private
    */
-  _readMessage: function (msg: CommentDto, json: any): CommentDto {
+  _readMessage: function (msg: CommDto, json: any): CommDto {
     const _id_ = json["id"];
     if (_id_) {
       msg.id = _id_;

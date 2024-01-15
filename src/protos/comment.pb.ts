@@ -16,7 +16,7 @@ import type { ClientConfiguration } from "twirpscript";
 //========================================//
 
 export interface GetCommentsResponseDto {
-  comments: Comment[];
+  comments: CommentDto[];
 }
 
 export interface DeleteCommentResponseDto {
@@ -50,7 +50,7 @@ export interface CreateCommentDto {
   postId: string;
 }
 
-export interface Comment {
+export interface CommentDto {
   id: string;
   authorId: string;
   message: string;
@@ -91,25 +91,25 @@ export async function getCommentsForPost(
 export async function createComment(
   createCommentDto: CreateCommentDto,
   config?: ClientConfiguration,
-): Promise<Comment> {
+): Promise<CommentDto> {
   const response = await PBrequest(
     "/CommentProto/createComment",
     CreateCommentDto.encode(createCommentDto),
     config,
   );
-  return Comment.decode(response);
+  return CommentDto.decode(response);
 }
 
 export async function updateComment(
   updateCommentDto: UpdateCommentDto,
   config?: ClientConfiguration,
-): Promise<Comment> {
+): Promise<CommentDto> {
   const response = await PBrequest(
     "/CommentProto/updateComment",
     UpdateCommentDto.encode(updateCommentDto),
     config,
   );
-  return Comment.decode(response);
+  return CommentDto.decode(response);
 }
 
 export async function deleteComment(
@@ -155,25 +155,25 @@ export async function getCommentsForPostJSON(
 export async function createCommentJSON(
   createCommentDto: CreateCommentDto,
   config?: ClientConfiguration,
-): Promise<Comment> {
+): Promise<CommentDto> {
   const response = await JSONrequest(
     "/CommentProto/createComment",
     CreateCommentDtoJSON.encode(createCommentDto),
     config,
   );
-  return CommentJSON.decode(response);
+  return CommentDtoJSON.decode(response);
 }
 
 export async function updateCommentJSON(
   updateCommentDto: UpdateCommentDto,
   config?: ClientConfiguration,
-): Promise<Comment> {
+): Promise<CommentDto> {
   const response = await JSONrequest(
     "/CommentProto/updateComment",
     UpdateCommentDtoJSON.encode(updateCommentDto),
     config,
   );
-  return CommentJSON.decode(response);
+  return CommentDtoJSON.decode(response);
 }
 
 export async function deleteCommentJSON(
@@ -204,11 +204,11 @@ export interface CommentProto<Context = unknown> {
   createComment: (
     createCommentDto: CreateCommentDto,
     context: Context,
-  ) => Promise<Comment> | Comment;
+  ) => Promise<CommentDto> | CommentDto;
   updateComment: (
     updateCommentDto: UpdateCommentDto,
     context: Context,
-  ) => Promise<Comment> | Comment;
+  ) => Promise<CommentDto> | CommentDto;
   deleteComment: (
     commentId: CommentId,
     context: Context,
@@ -241,13 +241,13 @@ export function createCommentProto<Context>(service: CommentProto<Context>) {
         name: "createComment",
         handler: service.createComment,
         input: { protobuf: CreateCommentDto, json: CreateCommentDtoJSON },
-        output: { protobuf: Comment, json: CommentJSON },
+        output: { protobuf: CommentDto, json: CommentDtoJSON },
       },
       updateComment: {
         name: "updateComment",
         handler: service.updateComment,
         input: { protobuf: UpdateCommentDto, json: UpdateCommentDtoJSON },
-        output: { protobuf: Comment, json: CommentJSON },
+        output: { protobuf: CommentDto, json: CommentDtoJSON },
       },
       deleteComment: {
         name: "deleteComment",
@@ -310,7 +310,7 @@ export const GetCommentsResponseDto = {
       writer.writeRepeatedMessage(
         1,
         msg.comments as any,
-        Comment._writeMessage,
+        CommentDto._writeMessage,
       );
     }
     return writer;
@@ -327,8 +327,8 @@ export const GetCommentsResponseDto = {
       const field = reader.getFieldNumber();
       switch (field) {
         case 1: {
-          const m = Comment.initialize();
-          reader.readMessage(m, Comment._readMessage);
+          const m = CommentDto.initialize();
+          reader.readMessage(m, CommentDto._readMessage);
           msg.comments.push(m);
           break;
         }
@@ -801,31 +801,31 @@ export const CreateCommentDto = {
   },
 };
 
-export const Comment = {
+export const CommentDto = {
   /**
-   * Serializes Comment to protobuf.
+   * Serializes CommentDto to protobuf.
    */
-  encode: function (msg: PartialDeep<Comment>): Uint8Array {
-    return Comment._writeMessage(
+  encode: function (msg: PartialDeep<CommentDto>): Uint8Array {
+    return CommentDto._writeMessage(
       msg,
       new protoscript.BinaryWriter(),
     ).getResultBuffer();
   },
 
   /**
-   * Deserializes Comment from protobuf.
+   * Deserializes CommentDto from protobuf.
    */
-  decode: function (bytes: ByteSource): Comment {
-    return Comment._readMessage(
-      Comment.initialize(),
+  decode: function (bytes: ByteSource): CommentDto {
+    return CommentDto._readMessage(
+      CommentDto.initialize(),
       new protoscript.BinaryReader(bytes),
     );
   },
 
   /**
-   * Initializes Comment with all fields set to their default value.
+   * Initializes CommentDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<Comment>): Comment {
+  initialize: function (msg?: Partial<CommentDto>): CommentDto {
     return {
       id: "",
       authorId: "",
@@ -842,7 +842,7 @@ export const Comment = {
    * @private
    */
   _writeMessage: function (
-    msg: PartialDeep<Comment>,
+    msg: PartialDeep<CommentDto>,
     writer: protoscript.BinaryWriter,
   ): protoscript.BinaryWriter {
     if (msg.id) {
@@ -873,9 +873,9 @@ export const Comment = {
    * @private
    */
   _readMessage: function (
-    msg: Comment,
+    msg: CommentDto,
     reader: protoscript.BinaryReader,
-  ): Comment {
+  ): CommentDto {
     while (reader.nextField()) {
       const field = reader.getFieldNumber();
       switch (field) {
@@ -959,7 +959,7 @@ export const GetCommentsResponseDtoJSON = {
   ): Record<string, unknown> {
     const json: Record<string, unknown> = {};
     if (msg.comments?.length) {
-      json["comments"] = msg.comments.map(CommentJSON._writeMessage);
+      json["comments"] = msg.comments.map(CommentDtoJSON._writeMessage);
     }
     return json;
   },
@@ -974,8 +974,8 @@ export const GetCommentsResponseDtoJSON = {
     const _comments_ = json["comments"];
     if (_comments_) {
       for (const item of _comments_) {
-        const m = CommentJSON.initialize();
-        CommentJSON._readMessage(m, item);
+        const m = CommentDtoJSON.initialize();
+        CommentDtoJSON._readMessage(m, item);
         msg.comments.push(m);
       }
     }
@@ -1366,25 +1366,28 @@ export const CreateCommentDtoJSON = {
   },
 };
 
-export const CommentJSON = {
+export const CommentDtoJSON = {
   /**
-   * Serializes Comment to JSON.
+   * Serializes CommentDto to JSON.
    */
-  encode: function (msg: PartialDeep<Comment>): string {
-    return JSON.stringify(CommentJSON._writeMessage(msg));
+  encode: function (msg: PartialDeep<CommentDto>): string {
+    return JSON.stringify(CommentDtoJSON._writeMessage(msg));
   },
 
   /**
-   * Deserializes Comment from JSON.
+   * Deserializes CommentDto from JSON.
    */
-  decode: function (json: string): Comment {
-    return CommentJSON._readMessage(CommentJSON.initialize(), JSON.parse(json));
+  decode: function (json: string): CommentDto {
+    return CommentDtoJSON._readMessage(
+      CommentDtoJSON.initialize(),
+      JSON.parse(json),
+    );
   },
 
   /**
-   * Initializes Comment with all fields set to their default value.
+   * Initializes CommentDto with all fields set to their default value.
    */
-  initialize: function (msg?: Partial<Comment>): Comment {
+  initialize: function (msg?: Partial<CommentDto>): CommentDto {
     return {
       id: "",
       authorId: "",
@@ -1400,7 +1403,9 @@ export const CommentJSON = {
   /**
    * @private
    */
-  _writeMessage: function (msg: PartialDeep<Comment>): Record<string, unknown> {
+  _writeMessage: function (
+    msg: PartialDeep<CommentDto>,
+  ): Record<string, unknown> {
     const json: Record<string, unknown> = {};
     if (msg.id) {
       json["id"] = msg.id;
@@ -1429,7 +1434,7 @@ export const CommentJSON = {
   /**
    * @private
    */
-  _readMessage: function (msg: Comment, json: any): Comment {
+  _readMessage: function (msg: CommentDto, json: any): CommentDto {
     const _id_ = json["id"];
     if (_id_) {
       msg.id = _id_;
