@@ -88,6 +88,18 @@ export async function getPosts(
   return GetPostsResponseDto.decode(response);
 }
 
+export async function getAllPosts(
+  emptyPost: EmptyPost,
+  config?: ClientConfiguration,
+): Promise<GetPostsResponseDto> {
+  const response = await PBrequest(
+    "/PostProto/getAllPosts",
+    EmptyPost.encode(emptyPost),
+    config,
+  );
+  return GetPostsResponseDto.decode(response);
+}
+
 export async function getPost(
   postId: PostId,
   config?: ClientConfiguration,
@@ -152,6 +164,18 @@ export async function getPostsJSON(
   return GetPostsResponseDtoJSON.decode(response);
 }
 
+export async function getAllPostsJSON(
+  emptyPost: EmptyPost,
+  config?: ClientConfiguration,
+): Promise<GetPostsResponseDto> {
+  const response = await JSONrequest(
+    "/PostProto/getAllPosts",
+    EmptyPostJSON.encode(emptyPost),
+    config,
+  );
+  return GetPostsResponseDtoJSON.decode(response);
+}
+
 export async function getPostJSON(
   postId: PostId,
   config?: ClientConfiguration,
@@ -209,6 +233,10 @@ export interface PostProto<Context = unknown> {
     locationId: LocationId,
     context: Context,
   ) => Promise<GetPostsResponseDto> | GetPostsResponseDto;
+  getAllPosts: (
+    emptyPost: EmptyPost,
+    context: Context,
+  ) => Promise<GetPostsResponseDto> | GetPostsResponseDto;
   getPost: (postId: PostId, context: Context) => Promise<PostDto> | PostDto;
   createPost: (
     createPostDto: CreatePostDto,
@@ -232,6 +260,15 @@ export function createPostProto<Context>(service: PostProto<Context>) {
         name: "getPosts",
         handler: service.getPosts,
         input: { protobuf: LocationId, json: LocationIdJSON },
+        output: {
+          protobuf: GetPostsResponseDto,
+          json: GetPostsResponseDtoJSON,
+        },
+      },
+      getAllPosts: {
+        name: "getAllPosts",
+        handler: service.getAllPosts,
+        input: { protobuf: EmptyPost, json: EmptyPostJSON },
         output: {
           protobuf: GetPostsResponseDto,
           json: GetPostsResponseDtoJSON,

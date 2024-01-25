@@ -2,6 +2,7 @@ syntax = "proto3";
 
 service PostProto {
   rpc getPosts(LocationId) returns (GetPostsResponseDto);
+  rpc getAllPosts(EmptyPost) returns (GetPostsResponseDto);
   rpc getPost(PostId) returns (PostDto);
   rpc createPost(CreatePostDto) returns (PostDto);
   rpc updatePost(UpdatePostDto) returns (PostDto);
