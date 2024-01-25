@@ -22,6 +22,15 @@ const postProto: PostProto = {
         }
         return { posts: posts };
     },
+    getAllPosts: async (EmptyPost): Promise<GetPostsResponseDto> => {
+        const AppDataSource = await getDataSource();
+        const postRepo = AppDataSource.getRepository(Post);
+        const posts = await postRepo.manager.find(Post);
+        if(posts.length <= 0) {
+            return { posts: [] }
+        }
+        return { posts: posts };
+    },
     getPost: async (postId: PostId): Promise<PostDto> => {
         const AppDataSource = await getDataSource();
         const postRepo = AppDataSource.getRepository(Post);

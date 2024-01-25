@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { Post } from './entity/post.entity.ts';
 import { Comment } from './entity/comment.entity.ts';
 import { SavedPost } from './entity/saved-post.entity.ts';
+import { Notification } from './entity/notification.entity.ts';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: 'post',
   synchronize: true,
   logging: true,
-  entities: [Comment, Post, SavedPost],
+  entities: [Comment, Post, SavedPost, Notification],
   subscribers: [],
   migrations: [],
 });

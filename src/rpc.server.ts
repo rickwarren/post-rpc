@@ -3,10 +3,11 @@ import { createTwirpServer } from "twirpscript";
 import { commentProtoHandler } from "./services/comment.service.ts";
 import { postProtoHandler } from "./services/post.service.ts";
 import { savedPostProtoHandler } from "./services/saved-post.service.ts";
+import { notificationProtoHandler } from "./services/notification.service.ts";
 
 const PORT = 8081;
 
-const app = createTwirpServer([commentProtoHandler, postProtoHandler, savedPostProtoHandler]);
+const app = createTwirpServer([commentProtoHandler, postProtoHandler, savedPostProtoHandler, notificationProtoHandler]);
 
 app.use(async (req, _ctx, next) => {
   if (req.method === "OPTIONS") {
